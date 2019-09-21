@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:http/http.dart' as http;
 import 'package:flutter_ecommerce/models/app_state.dart';
 import 'package:flutter_ecommerce/models/user.dart';
 import 'package:redux/redux.dart';
@@ -21,4 +21,19 @@ class GetUserAction {
   User get user => this._user;
 
   GetUserAction(this._user);
+}
+
+/* Products Actions */
+ThunkAction<AppState> getProductsAction = (Store<AppState> store) async {
+  http.Response response = await http.get('https://flutter-ecommerce-api.herokuapp.com/products');
+  final List<dynamic> responseData = json.decode(response.body);
+  store.dispatch(GetProductsAction(responseData));
+};
+
+class GetProductsAction {
+  final List<dynamic> _products;
+
+  List<dynamic> get products => this._products;
+
+  GetProductsAction(this._products);
 }
