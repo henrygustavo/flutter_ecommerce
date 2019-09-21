@@ -52,7 +52,11 @@ class ProductsPageState extends State<ProductsPage> {
                                 style: Theme.of(context).textTheme.body1),
                             onPressed: () =>
                                 Navigator.pushNamed(context, '/register'))),
-                leading: state.user != null ? Icon(Icons.store) : Text(''),
+                leading: state.user != null
+                    ? IconButton(
+                        icon: Icon(Icons.store),
+                        onPressed: () => Navigator.pushNamed(context, '/cart'))
+                    : Text(''),
                 actions: [
                   Padding(
                       padding: EdgeInsets.only(right: 12.0),
