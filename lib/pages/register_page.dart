@@ -104,7 +104,7 @@ class RegisterPageState extends State<RegisterPage> {
   void _registerUser() async {
     setState(() => _isSubmitting = true);
     http.Response response = await http.post(
-          'https://flutter-ecommerce-api.herokuapp.com/auth/local/register',
+        'https://flutter-ecommerce-api.herokuapp.com/auth/local/register',
         body: {"username": _username, "email": _email, "password": _password});
     final responseData = json.decode(response.body);
     if (response.statusCode == 200) {
