@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/models/app_state.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -23,7 +21,7 @@ class ProductsPageState extends State<ProductsPage> {
     return StoreConnector<AppState, AppState>(
         converter: (store) => store.state,
         builder: (context, state) {
-          return Text(json.encode(state.user));
+          return state.user != null ? Text(state.user.username) : Text('');
         });
   }
 }
