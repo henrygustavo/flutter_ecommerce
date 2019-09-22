@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_ecommerce/models/order.dart';
 import 'package:flutter_ecommerce/models/product.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_ecommerce/models/app_state.dart';
@@ -101,6 +102,14 @@ ThunkAction<AppState> getCartProductsAction = (Store<AppState> store) async {
   store.dispatch(GetCartProductsAction(cartProducts));
 };
 
+ThunkAction<AppState> clearCartProductsAction = (Store<AppState> store) async {
+  final User user = store.state.user;
+  await http.put('https://flutter-ecommerce-api.herokuapp.com/carts/${user.cartId}',
+      body: {"products": json.encode([])},
+      headers: {'Authorization': "Bearer ${user.jwt}"});
+  store.dispatch(ClearCartProductsAction(List(0)));
+};
+
 class ToggleCartProductAction {
   final List<Product> _cartProducts;
 
@@ -115,6 +124,14 @@ class GetCartProductsAction {
   List<Product> get cartProducts => this._cartProducts;
 
   GetCartProductsAction(this._cartProducts);
+}
+
+class ClearCartProductsAction {
+  final List<Product> _cartProducts;
+
+  List<Product> get cartProducts => this._cartProducts;
+
+  ClearCartProductsAction(this._cartProducts);
 }
 
 /* Cards Actions */
@@ -167,4 +184,13 @@ class GetCardTokenAction {
   String get cardToken => this._cardToken;
 
   GetCardTokenAction(this._cardToken);
+}
+
+/* Orders Actions */
+class AddOrderAction {
+  final Order _order;
+
+  Order get order => this._order;
+
+  AddOrderAction(this._order);
 }
