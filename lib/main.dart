@@ -38,7 +38,9 @@ class MyApp extends StatelessWidget {
                 }),
             '/login': (BuildContext context) => LoginPage(),
             '/register': (BuildContext context) => RegisterPage(),
-            '/cart': (BuildContext context) => CartPage()
+            '/cart': (BuildContext context) => CartPage(onInit: () {
+                  StoreProvider.of<AppState>(context).dispatch(getCardsAction);
+                })
           },
           theme: ThemeData(
               brightness: Brightness.dark,

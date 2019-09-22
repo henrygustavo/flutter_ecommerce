@@ -75,14 +75,9 @@ ThunkAction<AppState> toggleCartProductAction(Product cartProduct) {
     }
     final List<String> cartProductsIds =
         updatedCartProducts.map((product) => product.id).toList();
-
-   http.Response response = await http.put('https://flutter-ecommerce-api.herokuapp.com/carts/${user.cartId}',
- 
+    await http.put('https://flutter-ecommerce-api.herokuapp.com/carts/${user.cartId}',
         body: {"products": json.encode(cartProductsIds)},
         headers: {"Authorization": "Bearer ${user.jwt}"});
-
-         final responseData = json.decode(response.body);
-         
     store.dispatch(ToggleCartProductAction(updatedCartProducts));
   };
 }
@@ -120,4 +115,22 @@ class GetCartProductsAction {
   List<Product> get cartProducts => this._cartProducts;
 
   GetCartProductsAction(this._cartProducts);
+}
+
+/* Cards Actions */
+ThunkAction<AppState> getCardsAction = (Store<AppState> store) async {
+  final String customerId = store.state.user.customerId;
+  http.Response response =
+      await http.get('https://flutter-ecommerce-api.herokuapp.com/card?$customerId');
+  final responseData = json.decode(response.body);
+  // print('Card Data: $responseData');
+  store.dispatch(GetCardsAction(responseData));
+};
+
+class GetCardsAction {
+  List<dynamic> _cards;
+
+  List<dynamic> get cards => this._cards;
+
+  GetCardsAction(this._cards);
 }
