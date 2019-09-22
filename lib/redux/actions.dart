@@ -134,3 +134,37 @@ class GetCardsAction {
 
   GetCardsAction(this._cards);
 }
+
+class AddCardAction {
+  final dynamic _card;
+
+  dynamic get card => this._card;
+
+  AddCardAction(this._card);
+}
+
+/* Card Token Actions */
+ThunkAction<AppState> getCardTokenAction = (Store<AppState> store) async {
+  final String jwt = store.state.user.jwt;
+  http.Response response = await http.get('https://flutter-ecommerce-api.herokuapp.com/users/me',
+      headers: {'Authorization': 'Bearer $jwt'});
+  final responseData = json.decode(response.body);
+  final String cardToken = responseData['card_token'];
+  store.dispatch(GetCardTokenAction(cardToken));
+};
+
+class UpdateCardTokenAction {
+  final String _cardToken;
+
+  String get cardToken => this._cardToken;
+
+  UpdateCardTokenAction(this._cardToken);
+}
+
+class GetCardTokenAction {
+  final String _cardToken;
+
+  String get cardToken => this._cardToken;
+
+  GetCardTokenAction(this._cardToken);
+}

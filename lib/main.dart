@@ -40,6 +40,8 @@ class MyApp extends StatelessWidget {
             '/register': (BuildContext context) => RegisterPage(),
             '/cart': (BuildContext context) => CartPage(onInit: () {
                   StoreProvider.of<AppState>(context).dispatch(getCardsAction);
+                  StoreProvider.of<AppState>(context)
+                      .dispatch(getCardTokenAction);
                 })
           },
           theme: ThemeData(
