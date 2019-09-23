@@ -16,7 +16,7 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String pictureUrl = 'https://flutter-ecommerce-api.herokuapp.com${item.picture['url']}';
+    final String pictureUrl = item.url;
     return InkWell(
         onTap: () =>
             Navigator.of(context).push(MaterialPageRoute(builder: (context) {

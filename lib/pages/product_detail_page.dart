@@ -17,7 +17,7 @@ class ProductDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String pictureUrl = 'https://flutter-ecommerce-api.herokuapp.com${item.picture['url']}';
+    final String pictureUrl = item.url;
     final Orientation orientation = MediaQuery.of(context).orientation;
     return Scaffold(
         key: _scaffoldKey,

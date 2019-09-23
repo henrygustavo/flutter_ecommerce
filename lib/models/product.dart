@@ -5,14 +5,14 @@ class Product {
   String name;
   String description;
   num price;
-  Map<String, dynamic> picture;
+  String url;
 
   Product(
       {@required this.id,
       @required this.name,
       @required this.description,
       @required this.price,
-      @required this.picture});
+      @required this.url});
 
   Map<String, dynamic> toJson() {
     return {
@@ -20,7 +20,7 @@ class Product {
       "name": name,
       "description": description,
       "price": price,
-      "picture": picture
+      "url": url
     };
   }
 
@@ -30,6 +30,6 @@ class Product {
         name: json['name'],
         description: json['description'],
         price: json['price'],
-        picture: json['picture']);
+        url: json['url']);
   }
 }
