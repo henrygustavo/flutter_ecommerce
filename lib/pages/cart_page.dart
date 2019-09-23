@@ -27,7 +27,7 @@ class CartPageState extends State<CartPage> {
   void initState() {
     super.initState();
     widget.onInit();
-    StripeSource.setPublishableKey(STRIPE_SECRET_KEY);
+    StripeSource.setPublishableKey(STRIPE_PUBLISH_KEY);
   }
 
   Widget _cartTab(state) {
