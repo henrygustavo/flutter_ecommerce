@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:flutter_ecommerce/utils/constants.dart';
 class RegisterPage extends StatefulWidget {
   @override
   RegisterPageState createState() => RegisterPageState();
@@ -104,7 +104,7 @@ class RegisterPageState extends State<RegisterPage> {
   void _registerUser() async {
     setState(() => _isSubmitting = true);
     http.Response response = await http.post(
-        'https://flutter-ecommerce-api.herokuapp.com/auth/local/register',
+        '${API_URL}auth/local/register',
         body: {"username": _username, "email": _email, "password": _password});
     final responseData = json.decode(response.body);
     if (response.statusCode == 200) {

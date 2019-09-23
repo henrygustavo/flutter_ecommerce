@@ -10,6 +10,7 @@ import 'package:stripe_payment/stripe_payment.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:flutter_ecommerce/utils/constants.dart';
 
 class CartPage extends StatefulWidget {
   final void Function() onInit;
@@ -26,8 +27,7 @@ class CartPageState extends State<CartPage> {
   void initState() {
     super.initState();
     widget.onInit();
-    StripeSource.setPublishableKey(
-        'pk_test_24MfPM77rrcgpW2WhYngl5Ma00b5rG5SAf');
+    StripeSource.setPublishableKey(STRIPE_SECRET_KEY);
   }
 
   Widget _cartTab(state) {
@@ -55,11 +55,11 @@ class CartPageState extends State<CartPage> {
     _addCard(cardToken) async {
       final User user = state.user;
       // update user's data to include cardToken (PUT /users/:id)
-      await http.put('https://flutter-ecommerce-api.herokuapp.com/users/${user.id}',
+      await http.put('${API_URL}users/${user.id}',
           body: {"card_token": cardToken},
           headers: {"Authorization": "Bearer ${user.jwt}"});
       // associate cardToken (added card) with Stripe customer (POST /card/add)
-      http.Response response = await http.post('https://flutter-ecommerce-api.herokuapp.com/card/add',
+      http.Response response = await http.post('${API_URL}card/add',
           body: {"source": cardToken, "customer": user.customerId});
       final responseData = json.decode(response.body);
       return responseData;
@@ -211,7 +211,7 @@ class CartPageState extends State<CartPage> {
       _checkoutCartProducts() async {
         // create new order in Strapi
         http.Response response =
-            await http.post('https://flutter-ecommerce-api.herokuapp.com/orders', body: {
+            await http.post('${API_URL}orders', body: {
           "amount": calculateTotalPrice(state.cartProducts),
           "products": json.encode(state.cartProducts),
           "source": state.cardToken,

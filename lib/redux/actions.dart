@@ -7,6 +7,7 @@ import 'package:flutter_ecommerce/models/user.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_ecommerce/utils/constants.dart';
 
 /* User Actions */
 ThunkAction<AppState> getUserAction = (Store<AppState> store) async {
@@ -42,7 +43,7 @@ class LogoutUserAction {
 
 /* Products Actions */
 ThunkAction<AppState> getProductsAction = (Store<AppState> store) async {
-  http.Response response = await http.get('https://flutter-ecommerce-api.herokuapp.com/products');
+  http.Response response = await http.get('${API_URL}products');
   final List<dynamic> responseData = json.decode(response.body);
   List<Product> products = [];
   responseData.forEach((productData) {
@@ -76,7 +77,7 @@ ThunkAction<AppState> toggleCartProductAction(Product cartProduct) {
     }
     final List<String> cartProductsIds =
         updatedCartProducts.map((product) => product.id).toList();
-    await http.put('https://flutter-ecommerce-api.herokuapp.com/carts/${user.cartId}',
+    await http.put('${API_URL}carts/${user.cartId}',
         body: {"products": json.encode(cartProductsIds)},
         headers: {"Authorization": "Bearer ${user.jwt}"});
     store.dispatch(ToggleCartProductAction(updatedCartProducts));
@@ -91,7 +92,7 @@ ThunkAction<AppState> getCartProductsAction = (Store<AppState> store) async {
   }
   final User user = User.fromJson(json.decode(storedUser));
   http.Response response = await http.get(
-      'https://flutter-ecommerce-api.herokuapp.com/carts/${user.cartId}',
+      '${API_URL}carts/${user.cartId}',
       headers: {'Authorization': 'Bearer ${user.jwt}'});
   final responseData = json.decode(response.body)['products'];
   List<Product> cartProducts = [];
@@ -104,7 +105,7 @@ ThunkAction<AppState> getCartProductsAction = (Store<AppState> store) async {
 
 ThunkAction<AppState> clearCartProductsAction = (Store<AppState> store) async {
   final User user = store.state.user;
-  await http.put('https://flutter-ecommerce-api.herokuapp.com/carts/${user.cartId}',
+  await http.put('${API_URL}carts/${user.cartId}',
       body: {"products": json.encode([])},
       headers: {'Authorization': "Bearer ${user.jwt}"});
   store.dispatch(ClearCartProductsAction(List(0)));
@@ -138,7 +139,7 @@ class ClearCartProductsAction {
 ThunkAction<AppState> getCardsAction = (Store<AppState> store) async {
   final String customerId = store.state.user.customerId;
   http.Response response =
-      await http.get('https://flutter-ecommerce-api.herokuapp.com/card?$customerId');
+      await http.get('${API_URL}card?$customerId');
   final responseData = json.decode(response.body);
   // print('Card Data: $responseData');
   store.dispatch(GetCardsAction(responseData));
@@ -163,7 +164,7 @@ class AddCardAction {
 /* Card Token Actions */
 ThunkAction<AppState> getCardTokenAction = (Store<AppState> store) async {
   final String jwt = store.state.user.jwt;
-  http.Response response = await http.get('https://flutter-ecommerce-api.herokuapp.com/users/me',
+  http.Response response = await http.get('${API_URL}users/me',
       headers: {'Authorization': 'Bearer $jwt'});
   final responseData = json.decode(response.body);
   List<Order> orders = [];
