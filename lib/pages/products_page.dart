@@ -17,11 +17,12 @@ final gradientBackground = BoxDecoration(
       0.9
     ],
         colors: [
-      Colors.deepOrange[300],
-      Colors.deepOrange[400],
-      Colors.deepOrange[500],
-      Colors.deepOrange[600],
-      Colors.deepOrange[700]
+      //Colors.deepOrange[300],
+      Colors.cyan[300],
+      Colors.cyan[400],
+      Colors.cyan[500],
+      Colors.cyan[600],
+      Colors.cyan[700]
     ]));
 
 class ProductsPage extends StatefulWidget {
@@ -53,14 +54,7 @@ class ProductsPageState extends State<ProductsPage> {
                                 style: Theme.of(context).textTheme.body1),
                             onPressed: () =>
                                 Navigator.pushNamed(context, '/register'))),
-                leading: state.user != null
-                    ? BadgeIconButton(
-                        itemCount: state.cartProducts.length,
-                        badgeColor: Colors.lime,
-                        badgeTextColor: Colors.black,
-                        icon: Icon(Icons.store),
-                        onPressed: () => Navigator.pushNamed(context, '/cart'))
-                    : Text(''),
+                
                 actions: [
                   Padding(
                       padding: EdgeInsets.only(right: 12.0),
@@ -73,8 +67,17 @@ class ProductsPageState extends State<ProductsPage> {
                                 icon: Icon(Icons.exit_to_app),
                                 onPressed: callback)
                             : Text('');
-                      }))
-                ]);
+                      })),
+                  state.user != null
+                    ? BadgeIconButton(
+                        itemCount: state.cartProducts.length,
+                        badgeColor: Colors.lime,
+                        badgeTextColor: Colors.black,
+                        icon: Icon(Icons.store),
+                        onPressed: () => Navigator.pushNamed(context, '/cart'))
+                    : Text(''),
+                ]
+                );
           }));
 
   @override
@@ -82,6 +85,58 @@ class ProductsPageState extends State<ProductsPage> {
     final Orientation orientation = MediaQuery.of(context).orientation;
     return Scaffold(
         appBar: _appBar,
+        drawer: Drawer(
+            child: ListView(
+          children: <Widget>[
+            // header part
+            new UserAccountsDrawerHeader(
+              accountName: Text('Frank Jonislla'),
+              accountEmail: Text('frank.che88@gmail.com'),
+              currentAccountPicture: GestureDetector(
+                child: CircleAvatar(
+                  backgroundColor: Colors.grey,
+                  child: Icon(Icons.person, color: Colors.white),
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () {},
+              child: ListTile(
+                title: Text('Home page'),
+                leading: Icon(Icons.home),
+              ),
+            ),
+            InkWell(
+              onTap: () {},
+              child: ListTile(
+                title: Text('My Account'),
+                leading: Icon(
+                  Icons.person,
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () {},
+              child: ListTile(
+                title: Text('My orders'),
+                leading: Icon(
+                  Icons.shopping_basket,
+                ),
+              ),
+            ),
+            Divider(),
+            InkWell(
+              onTap: () {},
+              child: ListTile(
+                title: Text('About'),
+                leading: Icon(
+                  Icons.help,
+                  color: Colors.green,
+                ),
+              ),
+            ),
+          ],
+        )),
         body: Container(
             decoration: gradientBackground,
             child: StoreConnector<AppState, AppState>(
@@ -108,7 +163,12 @@ class ProductsPageState extends State<ProductsPage> {
                                                 : 1.3),
                                 itemBuilder: (context, i) =>
                                     ProductItem(item: state.products[i]))))
-                  ]);
-                })));
+              ]
+            );
+          }
+        )
+      )
+    
+    );
   }
 }

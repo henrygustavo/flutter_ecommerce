@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
     return StoreProvider(
         store: store,
         child: MaterialApp(
-          title: 'Flutter E-Commerce',
+          title: 'Ropas Fashion',
           routes: {
             '/': (BuildContext context) => ProductsPage(onInit: () {
                   StoreProvider.of<AppState>(context).dispatch(getUserAction);
@@ -46,8 +46,8 @@ class MyApp extends StatelessWidget {
           },
           theme: ThemeData(
               brightness: Brightness.dark,
-              primaryColor: Colors.cyan[400],
-              accentColor: Colors.deepOrange[200],
+              primaryColor: Colors.lightBlue[800], //Colors.cyan[400],
+              accentColor: Colors.cyan[600], //Colors.deepOrange[200],
               textTheme: TextTheme(
                   headline:
                       TextStyle(fontSize: 72.0, fontWeight: FontWeight.bold),

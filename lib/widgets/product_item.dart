@@ -38,7 +38,7 @@ class ProductItem extends StatelessWidget {
                           ? IconButton(
                               icon: Icon(Icons.shopping_cart),
                               color: _isInCart(state, item.id)
-                                  ? Colors.cyan[700]
+                                  ? Colors.cyan[200]
                                   : Colors.white,
                               onPressed: () {
                                 StoreProvider.of<AppState>(context)
