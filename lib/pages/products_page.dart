@@ -125,7 +125,7 @@ class ProductsPageState extends State<ProductsPage> {
           builder: (context, state) {
             return AppBar(
                 centerTitle: true,
-                title: Text('Tienda de moda'),
+                title: Text('Ropas Fashion'),
                         
                 actions: [
                   
