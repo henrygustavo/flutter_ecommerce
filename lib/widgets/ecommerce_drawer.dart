@@ -60,7 +60,7 @@ class EcommerceDrawer extends StatelessWidget {
             padding: const EdgeInsets.only(top: 80.0),
             child: ListTile(
               title: Text('Register'),
-              leading: Icon(Icons.person,
+              leading: Icon(Icons.person_add,
                 color: Colors.yellow,
               ),
             ),
@@ -74,7 +74,7 @@ class EcommerceDrawer extends StatelessWidget {
               Navigator.pushNamed(context, '/login'),
           child: ListTile(
             title: Text('Login'),
-            leading: Icon(Icons.person),
+            leading: Icon(Icons.person_outline),
           ),
         )
       );
