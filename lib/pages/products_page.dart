@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/models/app_state.dart';
+import 'package:flutter_ecommerce/models/user.dart';
 import 'package:flutter_ecommerce/redux/actions.dart';
 import 'package:flutter_ecommerce/widgets/product_item.dart';
 import 'package:flutter_redux/flutter_redux.dart';
+import '../widgets/ecommerce_drawer.dart';
 import 'package:badges/badges.dart';
 
 final gradientBackground = BoxDecoration(
@@ -42,77 +44,7 @@ class ProductsPageState extends State<ProductsPage> {
   final _drawer = StoreConnector<AppState, AppState>(
     converter: (store) => store.state,
     builder: (context, state) {
-      return Drawer(
-        child: ListView(
-
-          children: <Widget>[
-            // header part
-            state.user != null
-            ?new UserAccountsDrawerHeader(
-              accountName: Text(state.user.username),
-              accountEmail: Text(state.user.email),
-              currentAccountPicture: GestureDetector(
-                child: CircleAvatar(
-                  backgroundColor: Colors.grey,
-                  child: Icon(Icons.person, color: Colors.white),
-                ),
-              ),
-            )
-            : 
-              
-            InkWell(
-              onTap: () =>
-                  Navigator.pushNamed(context, '/register'),
-              child: Padding(
-                padding: const EdgeInsets.only(top: 80.0),
-                child: ListTile(
-                  title: Text('Login'),
-                  leading: Icon(Icons.person),
-                ),
-              ),
-            ),
-
-            InkWell(
-              onTap: () {},
-              child: ListTile(
-                title: Text('Home page'),
-                leading: Icon(Icons.home),
-              ),
-            ),
-            InkWell(
-              onTap: () {},
-              child: ListTile(
-                title: Text('My Account'),
-                leading: Icon(
-                  Icons.person,
-                ),
-              ),
-            ),
-            InkWell(
-              onTap: () => Navigator.pushNamed(context, '/cart'),
-              child: ListTile(
-                title: Text('My orders'),
-                leading: Icon(
-                  Icons.shopping_basket,
-                ),
-              ),
-            ),
-            Divider(),
-            InkWell(
-              onTap: () {},
-              child: ListTile(
-                title: Text('About'),
-                leading: Icon(
-                  Icons.help,
-                  color: Colors.green,
-                ),
-              ),
-            ),
-          ],
-
-        ),
-
-      );
+      return EcommerceDrawer(user: state.user);
     }
 
 
