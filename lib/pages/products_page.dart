@@ -39,66 +39,39 @@ class ProductsPageState extends State<ProductsPage> {
     widget.onInit();
   }
 
-  final _appBar = PreferredSize(
-      preferredSize: Size.fromHeight(60.0),
-      child: StoreConnector<AppState, AppState>(
-          converter: (store) => store.state,
-          builder: (context, state) {
-            return AppBar(
-                centerTitle: true,
-                title: SizedBox(
-                    child: state.user != null
-                        ? Text(state.user.username)
-                        : FlatButton(
-                            child: Text('Register Here',
-                                style: Theme.of(context).textTheme.body1),
-                            onPressed: () =>
-                                Navigator.pushNamed(context, '/register'))),
-                
-                actions: [
-                  Padding(
-                      padding: EdgeInsets.only(right: 12.0),
-                      child: StoreConnector<AppState, VoidCallback>(
-                          converter: (store) {
-                        return () => store.dispatch(logoutUserAction);
-                      }, builder: (_, callback) {
-                        return state.user != null
-                            ? IconButton(
-                                icon: Icon(Icons.exit_to_app),
-                                onPressed: callback)
-                            : Text('');
-                      })),
-                  state.user != null
-                    ? BadgeIconButton(
-                        itemCount: state.cartProducts.length,
-                        badgeColor: Colors.lime,
-                        badgeTextColor: Colors.black,
-                        icon: Icon(Icons.store),
-                        onPressed: () => Navigator.pushNamed(context, '/cart'))
-                    : Text(''),
-                ]
-                );
-          }));
+  final _drawer = StoreConnector<AppState, AppState>(
+    converter: (store) => store.state,
+    builder: (context, state) {
+      return Drawer(
+        child: ListView(
 
-  @override
-  Widget build(BuildContext context) {
-    final Orientation orientation = MediaQuery.of(context).orientation;
-    return Scaffold(
-        appBar: _appBar,
-        drawer: Drawer(
-            child: ListView(
           children: <Widget>[
             // header part
-            new UserAccountsDrawerHeader(
-              accountName: Text('Frank Jonislla'),
-              accountEmail: Text('frank.che88@gmail.com'),
+            state.user != null
+            ?new UserAccountsDrawerHeader(
+              accountName: Text(state.user.username),
+              accountEmail: Text(state.user.email),
               currentAccountPicture: GestureDetector(
                 child: CircleAvatar(
                   backgroundColor: Colors.grey,
                   child: Icon(Icons.person, color: Colors.white),
                 ),
               ),
+            )
+            : 
+              
+            InkWell(
+              onTap: () =>
+                  Navigator.pushNamed(context, '/register'),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 80.0),
+                child: ListTile(
+                  title: Text('Login'),
+                  leading: Icon(Icons.person),
+                ),
+              ),
             ),
+
             InkWell(
               onTap: () {},
               child: ListTile(
@@ -116,7 +89,7 @@ class ProductsPageState extends State<ProductsPage> {
               ),
             ),
             InkWell(
-              onTap: () {},
+              onTap: () => Navigator.pushNamed(context, '/cart'),
               child: ListTile(
                 title: Text('My orders'),
                 leading: Icon(
@@ -136,7 +109,56 @@ class ProductsPageState extends State<ProductsPage> {
               ),
             ),
           ],
-        )),
+
+        ),
+
+      );
+    }
+
+
+  );
+
+  final _appBar = PreferredSize(
+      preferredSize: Size.fromHeight(60.0),
+      child: StoreConnector<AppState, AppState>(
+          converter: (store) => store.state,
+          builder: (context, state) {
+            return AppBar(
+                centerTitle: true,
+                title: Text('Tienda de moda'),
+                        
+                actions: [
+                  
+                  state.user != null
+                    ? BadgeIconButton(
+                        itemCount: state.cartProducts.length,
+                        badgeColor: Colors.lime,
+                        badgeTextColor: Colors.black,
+                        icon: Icon(Icons.store),
+                        onPressed: () => Navigator.pushNamed(context, '/cart'))
+                    : Text(''),
+                  Padding(
+                      padding: EdgeInsets.only(right: 12.0),
+                      child: StoreConnector<AppState, VoidCallback>(
+                          converter: (store) {
+                        return () => store.dispatch(logoutUserAction);
+                      }, builder: (_, callback) {
+                        return state.user != null
+                            ? IconButton(
+                                icon: Icon(Icons.exit_to_app),
+                                onPressed: callback)
+                            : Text('');
+                      })),
+                ]
+                );
+          }));
+
+  @override
+  Widget build(BuildContext context) {
+    final Orientation orientation = MediaQuery.of(context).orientation;
+    return Scaffold(
+        appBar: _appBar,
+        drawer: _drawer,
         body: Container(
             decoration: gradientBackground,
             child: StoreConnector<AppState, AppState>(
