@@ -96,10 +96,16 @@ ThunkAction<AppState> getCartProductsAction = (Store<AppState> store) async {
       headers: {'Authorization': 'Bearer ${user.jwt}'});
   final responseData = json.decode(response.body)['products'];
   List<Product> cartProducts = [];
+  
+  if(responseData == null) return;
+
   responseData.forEach((productData) {
+
     final Product product = Product.fromJson(productData);
     cartProducts.add(product);
+    
   });
+
   store.dispatch(GetCartProductsAction(cartProducts));
 };
 
