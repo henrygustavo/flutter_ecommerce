@@ -18,7 +18,8 @@ void main() {
       initialState: AppState.initial(),
       middleware: [thunkMiddleware, LoggingMiddleware.printer()]);
 
-      LoginGoogleStateWidget stateWidget = new LoginGoogleStateWidget(child:new MyApp(store: store));
+        LoginGoogleStateWidget stateWidget = new LoginGoogleStateWidget(child:new MyApp(store: store));
+
   runApp(stateWidget);
 }
 
