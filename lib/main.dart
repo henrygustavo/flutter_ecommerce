@@ -7,7 +7,6 @@ import 'package:flutter_ecommerce/redux/reducers.dart';
 import 'package:flutter_ecommerce/pages/login_page.dart';
 import 'package:flutter_ecommerce/pages/products_page.dart';
 import 'package:flutter_ecommerce/pages/register_page.dart';
-import 'package:flutter_ecommerce/widgets/login_google_widget.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
@@ -17,10 +16,8 @@ void main() {
   final store = Store<AppState>(appReducer,
       initialState: AppState.initial(),
       middleware: [thunkMiddleware, LoggingMiddleware.printer()]);
-
-        LoginGoogleStateWidget stateWidget = new LoginGoogleStateWidget(child:new MyApp(store: store));
-
-  runApp(stateWidget);
+      
+  runApp(MyApp(store: store));
 }
 
 class MyApp extends StatelessWidget {

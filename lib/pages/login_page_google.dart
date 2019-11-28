@@ -1,5 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_ecommerce/widgets/login_google_widget.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginGooglePage extends StatefulWidget {
   @override
@@ -7,6 +8,23 @@ class LoginGooglePage extends StatefulWidget {
 }
 
 class LoginPageGoogleState extends State<LoginGooglePage> {
+final GoogleSignIn _googleSignIn = GoogleSignIn();
+final FirebaseAuth _auth = FirebaseAuth.instance;
+
+Future < FirebaseUser > googleSignin() async {  
+    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+  final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+  final AuthCredential credential = GoogleAuthProvider.getCredential(
+    accessToken: googleAuth.accessToken,
+    idToken: googleAuth.idToken,
+  );
+
+  final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
+  print("signed in " + user.displayName);
+  return user;
+}  
+
 
   @override
   Widget build(BuildContext context) {
@@ -21,25 +39,10 @@ class LoginPageGoogleState extends State<LoginGooglePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-             new MyRaisedButton(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-}
-
-class MyRaisedButton extends StatelessWidget {
-  const MyRaisedButton({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return RaisedButton(
-                  onPressed: () => LoginGoogleStateWidget.of(context).signInWithGoogle(),
+              RaisedButton(
+                  onPressed: () => googleSignin()
+                                  .then((FirebaseUser user) => print(user))
+                                  .catchError((e) => print(e)),
                   padding: EdgeInsets.only(top: 3.0, bottom: 3.0, left: 3.0),
                   color: const Color(0xFFFFFFFF),
                   child: new Row( 
@@ -59,6 +62,12 @@ class MyRaisedButton extends StatelessWidget {
                           )),
                     ],
                   )
-              );
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
+
 }
