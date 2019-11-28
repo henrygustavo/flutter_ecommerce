@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "668585630115",
+    "firebase_url": "https://shopping-cart-28e76.firebaseio.com",
+    "project_id": "shopping-cart-28e76",
+    "storage_bucket": "shopping-cart-28e76.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:668585630115:android:0aa20720421295fb486216",
+        "android_client_info": {
+          "package_name": "pe.edu.unmsm.hfuentes.shopping.cart"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "668585630115-q32lcj2o4htu9gf24n2lag78ake1doq2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pe.edu.unmsm.hfuentes.shopping.cart",
+            "certificate_hash": "5ea966f87dbc3ccc4a7fce2acc89a5c5c81e60ce"
+          }
+        },
+        {
+          "client_id": "668585630115-ll2tnsdcifqjif0b25p6mpjamhhictdg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6VkXQ-KmyEVC1-DQ7_uodNMgyczlrQ5I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "668585630115-ll2tnsdcifqjif0b25p6mpjamhhictdg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

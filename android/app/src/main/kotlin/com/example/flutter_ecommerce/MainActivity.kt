@@ -1,4 +1,4 @@
-package com.example.flutter_ecommerce
+package pe.edu.unmsm.hfuentes.shopping.cart
 
 import android.os.Bundle
 
