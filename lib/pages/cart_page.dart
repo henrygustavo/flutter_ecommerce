@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/models/app_state.dart';
 import 'package:flutter_ecommerce/models/order.dart';
@@ -21,6 +22,7 @@ class CartPage extends StatefulWidget {
 }
 
 class CartPageState extends State<CartPage> {
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isSubmitting = false;
 
@@ -209,6 +211,9 @@ class CartPageState extends State<CartPage> {
               ]);
         }).then((value) async {
       _checkoutCartProducts() async {
+
+         var firebaseToken = await _firebaseMessaging.getToken();
+         print('firebaseToken:'+ firebaseToken);
         // create new order in Strapi
         http.Response response =
             await http.post('${API_URL}orders', body: {
