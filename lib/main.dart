@@ -7,6 +7,7 @@ import 'package:flutter_ecommerce/redux/reducers.dart';
 import 'package:flutter_ecommerce/pages/login_page.dart';
 import 'package:flutter_ecommerce/pages/products_page.dart';
 import 'package:flutter_ecommerce/pages/register_page.dart';
+import 'package:flutter_ecommerce/widgets/messaging_widget.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
                   StoreProvider.of<AppState>(context)
                       .dispatch(getCartProductsAction);
                 }),
+            '/notification': (BuildContext context) => MessagingWidget(),
             '/login': (BuildContext context) => LoginPage(),
             '/loginGoogle': (BuildContext context) => LoginGooglePage(),
             '/register': (BuildContext context) => RegisterPage(),

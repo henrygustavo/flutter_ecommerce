@@ -1,5 +1,7 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/models/app_state.dart';
+import 'package:flutter_ecommerce/models/message_notification.dart';
 import 'package:flutter_ecommerce/redux/actions.dart';
 import 'package:flutter_ecommerce/widgets/product_item.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -35,19 +37,19 @@ class ProductsPage extends StatefulWidget {
 }
 
 class ProductsPageState extends State<ProductsPage> {
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
   void initState() {
     super.initState();
     widget.onInit();
+    setFirebaseConfig();
   }
 
   final _drawer = StoreConnector<AppState, AppState>(
-    converter: (store) => store.state,
-    builder: (context, state) {
-      return EcommerceDrawer(user: state.user);
-    }
-
-
-  );
+      converter: (store) => store.state,
+      builder: (context, state) {
+        return EcommerceDrawer(user: state.user);
+      });
 
   final _appBar = PreferredSize(
       preferredSize: Size.fromHeight(60.0),
@@ -57,17 +59,16 @@ class ProductsPageState extends State<ProductsPage> {
             return AppBar(
                 centerTitle: true,
                 title: Text('Ropas Fashion'),
-                        
                 actions: [
-                  
                   state.user != null
-                    ? BadgeIconButton(
-                        itemCount: state.cartProducts.length,
-                        badgeColor: Colors.lime,
-                        badgeTextColor: Colors.black,
-                        icon: Icon(Icons.store),
-                        onPressed: () => Navigator.pushNamed(context, '/cart'))
-                    : Text(''),
+                      ? BadgeIconButton(
+                          itemCount: state.cartProducts.length,
+                          badgeColor: Colors.lime,
+                          badgeTextColor: Colors.black,
+                          icon: Icon(Icons.store),
+                          onPressed: () =>
+                              Navigator.pushNamed(context, '/cart'))
+                      : Text(''),
                   Padding(
                       padding: EdgeInsets.only(right: 12.0),
                       child: StoreConnector<AppState, VoidCallback>(
@@ -80,8 +81,7 @@ class ProductsPageState extends State<ProductsPage> {
                                 onPressed: callback)
                             : Text('');
                       })),
-                ]
-                );
+                ]);
           }));
 
   @override
@@ -116,12 +116,42 @@ class ProductsPageState extends State<ProductsPage> {
                                                 : 1.3),
                                 itemBuilder: (context, i) =>
                                     ProductItem(item: state.products[i]))))
-              ]
-            );
-          }
-        )
-      )
-    
+                  ]);
+                })));
+  }
+
+  void setFirebaseConfig() {
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> notification) async {
+        print('onMessage');
+          var token = await _firebaseMessaging.getToken();
+     
+          print("Instance ID: $token");
+         redirectToMessageWiget(notification);
+      },
+      onLaunch: (Map<String, dynamic> notification) async {
+        print('onLaunch');
+
+        redirectToMessageWiget(notification);
+      },
+      onResume: (Map<String, dynamic> notification) async {
+        print('onResume');
+        redirectToMessageWiget(notification);
+      },
     );
+    _firebaseMessaging.requestNotificationPermissions();
+  }
+
+  void redirectToMessageWiget(Map<String, dynamic> notification) {
+    
+    setState(() {
+      var messageNotification = MessageNotification(
+        title: notification["data"]["title"],
+        body: notification["data"]["body"],
+        color: Colors.blue,
+      );
+
+       Navigator.pushNamed(context, '/notification',arguments: messageNotification);
+    });
   }
 }
