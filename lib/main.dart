@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ecommerce/models/app_state.dart';
 import 'package:flutter_ecommerce/pages/cart_page.dart';
+import 'package:flutter_ecommerce/pages/login_page_google.dart';
 import 'package:flutter_ecommerce/redux/actions.dart';
 import 'package:flutter_ecommerce/redux/reducers.dart';
 import 'package:flutter_ecommerce/pages/login_page.dart';
@@ -15,6 +16,7 @@ void main() {
   final store = Store<AppState>(appReducer,
       initialState: AppState.initial(),
       middleware: [thunkMiddleware, LoggingMiddleware.printer()]);
+      
   runApp(MyApp(store: store));
 }
 
@@ -37,6 +39,7 @@ class MyApp extends StatelessWidget {
                       .dispatch(getCartProductsAction);
                 }),
             '/login': (BuildContext context) => LoginPage(),
+            '/loginGoogle': (BuildContext context) => LoginGooglePage(),
             '/register': (BuildContext context) => RegisterPage(),
             '/cart': (BuildContext context) => CartPage(onInit: () {
                   StoreProvider.of<AppState>(context).dispatch(getCardsAction);

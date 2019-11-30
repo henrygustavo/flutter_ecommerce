@@ -67,9 +67,18 @@ class EcommerceDrawer extends StatelessWidget {
       ),
     );
 
+  var loginGoogle = InkWell(
+      onTap: () => Navigator.pushNamed(context, '/loginGoogle'),
+      child: ListTile(
+        title: Text('Login Google'),
+        leading: Icon(Icons.person_outline),
+      ),
+    );
+
     _ret..add(register);
 
     _ret..add(login);
+    _ret..add(loginGoogle);
 
     return _ret;
   }
