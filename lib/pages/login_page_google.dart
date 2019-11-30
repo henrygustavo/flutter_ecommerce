@@ -1,6 +1,11 @@
+import 'dart:convert';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:flutter_ecommerce/services/auth.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_ecommerce/utils/constants.dart';
 
 class LoginGooglePage extends StatefulWidget {
   @override
@@ -8,28 +13,12 @@ class LoginGooglePage extends StatefulWidget {
 }
 
 class LoginPageGoogleState extends State<LoginGooglePage> {
-final GoogleSignIn _googleSignIn = GoogleSignIn();
-final FirebaseAuth _auth = FirebaseAuth.instance;
-
-Future < FirebaseUser > googleSignin() async {  
-    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-  final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-
-  final AuthCredential credential = GoogleAuthProvider.getCredential(
-    accessToken: googleAuth.accessToken,
-    idToken: googleAuth.idToken,
-  );
-
-  final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
-  print("signed in " + user.displayName);
-  return user;
-}  
-
+  final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
-
-       return Scaffold(
+    return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.blue,
         title: Text('Google Login'),
@@ -40,12 +29,12 @@ Future < FirebaseUser > googleSignin() async {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               RaisedButton(
-                  onPressed: () => googleSignin()
-                                  .then((FirebaseUser user) => print(user))
-                                  .catchError((e) => print(e)),
+                  onPressed: () => googleSignIn()
+                      .then((FirebaseUser user) => evaluateGoogleSignIn(user))
+                      .catchError((e) => print(e)),
                   padding: EdgeInsets.only(top: 3.0, bottom: 3.0, left: 3.0),
                   color: const Color(0xFFFFFFFF),
-                  child: new Row( 
+                  child: new Row(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       new Image.asset(
@@ -54,15 +43,14 @@ Future < FirebaseUser > googleSignin() async {
                       ),
                       new Container(
                           padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                          child: new Text( 
+                          child: new Text(
                             "Sign in with Google",
                             style: TextStyle(
                                 color: Colors.grey,
                                 fontWeight: FontWeight.bold),
                           )),
                     ],
-                  )
-              ),
+                  )),
             ],
           ),
         ),
@@ -70,4 +58,75 @@ Future < FirebaseUser > googleSignin() async {
     );
   }
 
+  Future<void> evaluateGoogleSignIn(FirebaseUser user) async {
+    bool isNewUser = await existUser(user.email);
+
+    if (isNewUser) {
+      registerUser(user);
+    } else {
+      loginUser(user);
+    }
+  }
+
+  void loginUser(FirebaseUser user) async {
+    http.Response response = await http.post('${API_URL}auth/local',
+        body: {"identifier": user.email, "password": user.email});
+     evaluateAuthResponse(response);
+  }
+
+  void registerUser(FirebaseUser user) async {
+    http.Response response = await http.post('${API_URL}auth/local/register',
+        body: {
+          "username": user.email,
+          "email": user.email,
+          "password": user.email
+        });
+
+        evaluateAuthResponse(response);
+    
+  }
+
+  void evaluateAuthResponse(dynamic response){
+
+final responseData = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      storeUserData(responseData);
+      showSuccessSnack();
+      redirectUser();
+      print(responseData);
+    } else {
+      final String errorMsg = responseData['message'];
+      showErrorSnack(errorMsg);
+    }
+
+  }
+
+
+  void storeUserData(responseData) async {
+    final prefs = await SharedPreferences.getInstance();
+    Map<String, dynamic> user = responseData['user'];
+    user.putIfAbsent('jwt', () => responseData['jwt']);
+    prefs.setString('user', json.encode(user));
+  }
+
+  void redirectUser() {
+    Future.delayed(Duration(seconds: 2), () {
+      Navigator.pushReplacementNamed(context, '/');
+    });
+  }
+
+  void showSuccessSnack() {
+    final snackbar = SnackBar(
+        content: Text('User successfully logged in!',
+            style: TextStyle(color: Colors.green)));
+    _scaffoldKey.currentState.showSnackBar(snackbar);
+  }
+
+  void showErrorSnack(String errorMsg) {
+    final snackbar =
+        SnackBar(content: Text(errorMsg, style: TextStyle(color: Colors.red)));
+    _scaffoldKey.currentState.showSnackBar(snackbar);
+    throw Exception('Error logging in: $errorMsg');
+  }
 }
