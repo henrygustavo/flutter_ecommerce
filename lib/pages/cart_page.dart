@@ -162,7 +162,7 @@ class CartPageState extends State<CartPage> {
                 title: Row(children: [
                   Padding(
                       padding: EdgeInsets.only(right: 10.0),
-                      child: Text('Add Card')),
+                      child: Text('Add Card 2')),
                   Icon(Icons.credit_card, size: 60.0)
                 ]),
                 content: SingleChildScrollView(
@@ -211,12 +211,10 @@ class CartPageState extends State<CartPage> {
               ]);
         }).then((value) async {
       _checkoutCartProducts() async {
-
-         var firebaseToken = await _firebaseMessaging.getToken();
-         print('firebaseToken:'+ firebaseToken);
+        var firebaseToken = await _firebaseMessaging.getToken();
+        print('firebaseToken:' + firebaseToken);
         // create new order in Strapi
-        http.Response response =
-            await http.post('${API_URL}orders', body: {
+        http.Response response = await http.post('${API_URL}orders', body: {
           "amount": calculateTotalPrice(state.cartProducts),
           "products": json.encode(state.cartProducts),
           "source": state.cardToken,
@@ -225,11 +223,25 @@ class CartPageState extends State<CartPage> {
           'Authorization': 'Bearer ${state.user.jwt}'
         });
         final responseData = json.decode(response.body);
+
+        responseData["deviceId"]=firebaseToken;
+
+        // Response axon
+        var body = json.encode(responseData);
+        http.Response responseAxon = await http.post('${API_AXON_URL}api/orders', body: body, headers: {
+          'Authorization': 'Bearer ${state.user.jwt}',
+          'Content-type': 'application/json;charset=utf-8', 
+          'Accept': 'application/json',
+        });
+
+        print('responseData:' + responseAxon.body);
+
         return responseData;
       }
 
       if (value == true) {
         // show loading spinner
+
         setState(() => _isSubmitting = true);
         // checkout cart products (create new order data in Strapi / charge card with Stripe)
         final newOrderData = await _checkoutCartProducts();
